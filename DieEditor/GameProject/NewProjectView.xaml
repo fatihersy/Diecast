@@ -1,0 +1,92 @@
+﻿<UserControl x:Class="DieEditor.GameProject.NewProjectView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DieEditor.GameProject"
+             mc:Ignorable="d" Width="800"
+             d:DataContext="{d:DesignInstance Type=local:NewProject, IsDesignTimeCreatable=True}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <local:NewProject/>
+    </UserControl.DataContext>
+
+    <Grid Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <ListBox Grid.Row="0" Grid.Column="0"
+                 Background="DarkGray" 
+                 Foreground="White" 
+                 FontSize="16"/>
+
+        <Grid Grid.Row="0" Grid.Column="1" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Grid.Column="1"
+                Margin="5,0,0,0" 
+                BorderBrush="Gray" 
+                BorderThickness="1">
+                <TextBlock Text="Content Area" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Stretch">
+                    <TextBlock Text="Name:" Foreground="Azure" />
+                    <TextBox Text="{Binding Name}" Height="30" FontSize="16"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Stretch">
+                    <TextBlock Text="Path:" Foreground="Azure"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Text="{Binding Path}" Height="30" FontSize="16" VerticalAlignment="Center"/>
+
+                        <Button Grid.Column="1" Content="Browse" Width="100" Height="30" Margin="5,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        
+        <StackPanel
+                Grid.Row="1" Grid.Column="1"
+                Orientation="Horizontal" 
+                HorizontalAlignment="Center" 
+                Margin="0,0,0,10">
+
+            <Button x:Name="OpenProjectButton"
+                IsDefault="True" 
+                Click="OpenButton_Click" 
+                Content="Open" 
+                Width="100" 
+                Height="30" 
+                Margin="5,0"/>
+
+            <Button x:Name="NewProjectButton"
+                IsCancel="True" 
+                Click="CancelButton_Click" 
+                Content="Cancel" 
+                Width="100" 
+                Height="30" 
+                Margin="0"/>
+        </StackPanel>
+</Grid>
+    
+</UserControl>
