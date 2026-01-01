@@ -2,6 +2,8 @@
   <Configurations>
     <Platform Name="x64" />
   </Configurations>
-  <Project Path="DieEditor/DieEditor.csproj" Id="8520411d-a036-48d3-8a3a-a7507ab2374b" />
+  <Project Path="DieEditor/DieEditor.csproj" Id="8520411d-a036-48d3-8a3a-a7507ab2374b">
+    <Platform Project="x64" />
+  </Project>
   <Project Path="Engine/Engine.vcxproj" Id="ecd3911f-9541-4ca5-88e1-377c26680afc" />
 </Solution>
