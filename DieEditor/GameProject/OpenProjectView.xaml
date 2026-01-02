@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:DieEditor.GameProject"
              mc:Ignorable="d" Width="800" 
              d:DesignHeight="450" d:DesignWidth="800">
+	<UserControl.DataContext>
+		<local:OpenProject/>
+	</UserControl.DataContext>
     <Grid Background="Black">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -16,12 +19,28 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <ListBox Grid.Row="0" Grid.Column="0" 
+		<ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Projects}" x:Name="projectsListBox"
+				 SelectedIndex="0"
                  Background="DarkGray" 
                  Foreground="White" 
-                 FontSize="16"/>
+                 FontSize="16">
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="ListBoxItem">
+					<EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
+				</Style>
+			</ListBox.ItemContainerStyle>
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal" Margin="5">
+						<Image Source="{Binding Icon}" Width="32" Height="32" Margin="0,0,10,0"/>
+						<TextBlock Text="{Binding ProjectName}" VerticalAlignment="Center"/>
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+			
+		</ListBox>
 
-        <Grid Grid.Row="0" Grid.Column="1" Margin="5">
+		<Grid Grid.Row="0" Grid.Column="1" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -30,8 +49,9 @@
                 Margin="5,0,0,0" 
                 BorderBrush="Gray" 
                 BorderThickness="1">
-                <TextBlock Text="Content Area" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            </Border>
+				<Image Source="{Binding SelectedItem.Screenshot, ElementName=projectsListBox}" 
+                       Stretch="Uniform"/>
+			</Border>
         </Grid>
 
         <StackPanel Grid.Row="1" Grid.Column="1"
