@@ -41,10 +41,11 @@ namespace DieEditor.GameProject
                 }
             }
 		}
-		public ICommand AddScene { get; private set; }
-		public ICommand RemoveScene { get; private set; }
-		public ICommand Undo { get; private set; }
-		public ICommand Redo { get; private set; }
+		public ICommand AddSceneCommand { get; private set; }
+		public ICommand RemoveSceneCommand { get; private set; }
+		public ICommand UndoCommand { get; private set; }
+		public ICommand RedoCommand { get; private set; }
+		public ICommand SaveCommand { get; private set; }
 
 		public static Project Load(string file)
         {
@@ -68,31 +69,32 @@ namespace DieEditor.GameProject
             }
             ActiveScene = Scenes.FirstOrDefault(s => s.IsActive);
 
-            AddScene = new RelayCommand<object>(x => 
+            AddSceneCommand = new RelayCommand<object>(x => 
             {
-                AddSceneInternal($"New Scene {_scenes.Count}");
+                AddScene($"New Scene {_scenes.Count}");
                 var newScene = _scenes.Last();
                 var index = _scenes.IndexOf(newScene);
                 UndoRedoManager.Add(new UndoRedoAction(
-                    () => RemoveSceneInternal(newScene),
+                    () => RemoveScene(newScene),
                     () => _scenes.Insert(index, newScene),
 					$"Add Scene {newScene.Name}"
                 ));
 			});
 
-            RemoveScene = new RelayCommand<Scene>(scene =>
+            RemoveSceneCommand = new RelayCommand<Scene>(scene =>
             {
                 var index = _scenes.IndexOf(scene);
-                RemoveSceneInternal(scene);
+                RemoveScene(scene);
                 UndoRedoManager.Add(new UndoRedoAction(
                     () => _scenes.Insert(index, scene),
-                    () => RemoveSceneInternal(scene),
+                    () => RemoveScene(scene),
                     $"Remove Scene {scene.Name}"
                 ));
             }, scene => !scene.IsActive);
 
-            Undo = new RelayCommand<object>(x => UndoRedoManager.Undo());
-            Redo = new RelayCommand<object>(x => UndoRedoManager.Redo());
+            UndoCommand = new RelayCommand<object>(x => UndoRedoManager.Undo());
+            RedoCommand = new RelayCommand<object>(x => UndoRedoManager.Redo());
+            SaveCommand = new RelayCommand<object>(x => Save(this));
 		}
 
         public Project(string name, string path)
@@ -103,12 +105,12 @@ namespace DieEditor.GameProject
             OnDeserialized(new StreamingContext());
         }
 
-        public void AddSceneInternal(string sceneName)
+        public void AddScene(string sceneName)
         {
             Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
 			_scenes.Add(new Scene(this, sceneName));
 		}
-		public void RemoveSceneInternal(Scene scene)
+		public void RemoveScene(Scene scene)
 		{
 			Debug.Assert(_scenes.Contains(scene));
             _scenes.Remove(scene);

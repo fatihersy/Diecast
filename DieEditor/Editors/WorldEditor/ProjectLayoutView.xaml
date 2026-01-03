@@ -17,7 +17,7 @@
 			<Button Content="Add Scene" Grid.Column="0" 
 				Width="96" Margin="20, 0, 0, 0"
 				VerticalAlignment="Center" HorizontalAlignment="Left"
-				Command="{Binding AddScene}"
+				Command="{Binding AddSceneCommand}"
 			/>
 		</StackPanel>
 
@@ -38,15 +38,39 @@
 										<Button Content="Remove" Grid.Column="0" 
 											Width="96"
 											VerticalAlignment="Center" HorizontalAlignment="Left"
-											Command="{ Binding DataContext.RemoveScene, RelativeSource={RelativeSource AncestorType=UserControl}}"
+											Command="{ Binding DataContext.RemoveSceneCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
 											CommandParameter="{Binding}" Margin="20, 0" Focusable="False"
+										/>
+										<Button Content="Add Entity" Grid.Column="0" 
+											Width="96"
+											VerticalAlignment="Center" HorizontalAlignment="Left"
+											IsEnabled="{Binding IsActive}"
+											Margin="20, 0" Focusable="False"
+											Click="AddGameEntitiyButton_Click"
 										/>
 									</StackPanel>
 								</Grid>
 							</Expander.Header>
-							<Border Background="DarkRed" Height="100">
-								
-							</Border>
+							<ListBox ItemsSource="{Binding GameEntities}" 
+									 IsEnabled="{Binding IsActive}"
+									 SelectionMode="Extended"
+									 SelectionChanged="OnGameEntitiesListBox_SelectionChanged"
+							>
+								<ListBox.ItemTemplate>
+									<DataTemplate>
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Text="{Binding Name}" FontSize="14"/>
+											<Button Content="Remove" Grid.Column="0" 
+													Width="96"
+													VerticalAlignment="Center" HorizontalAlignment="Left"
+													Command="{ Binding ParentScene.RemoveGameEntitiyCommand}" 
+													Margin="20, 0" Focusable="False"
+													CommandParameter="{Binding}"
+												/>
+										</StackPanel>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
 						</Expander>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>

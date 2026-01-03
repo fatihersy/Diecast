@@ -3,11 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:DieEditor"
-			 xmlns:editors="clr-namespace:DieEditor.Editors"
+             xmlns:local="clr-namespace:DieEditor.Editors"
 			 xmlns:utils="clr-namespace:DieEditor.Utilities"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" Focusable="True"
              d:DesignHeight="450" d:DesignWidth="800">
+	<UserControl.InputBindings>
+		<KeyBinding Key="Z" Modifiers="Control" Command="{Binding UndoCommand}"/>
+		<KeyBinding Key="Y" Modifiers="Control" Command="{Binding RedoCommand}"/>
+		<KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}"/>
+	</UserControl.InputBindings>
 	<Grid Background="DarkOrchid">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="25"/>
@@ -17,11 +21,11 @@
 			<StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center">
 				<Button Content="Undo" Grid.Column="0" 
 					Width="96" Height="20" Margin="20, 0, 0, 0"
-					Command="{Binding Undo}"
+					Command="{Binding UndoCommand}"
 				/>
 				<Button Content="Redo" Grid.Column="0" 
 					Width="96" Margin="20, 0, 0, 0"
-					Command="{Binding Redo}"
+					Command="{Binding RedoCommand}"
 				/>
 			</StackPanel>
 		</Grid>
@@ -60,7 +64,8 @@
 					HorizontalAlignment="Stretch" 
 					VerticalAlignment="Top" 
 				/>
-				<editors:ProjectLayoutView/>
+				<local:ProjectLayoutView/>
+				<local:GameEntityView Grid.Row="1"/>
 			</Grid>
 		</Grid>
 	</Grid>
