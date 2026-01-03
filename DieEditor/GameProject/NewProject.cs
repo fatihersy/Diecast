@@ -190,11 +190,12 @@ namespace DieEditor.GameProject
 				}
 				ValidateProjectPath();
 			} 
-            catch(Exception e)
+            catch(Exception ex)
             {
-                Debug.WriteLine(e.Message);
-                // TODO: Log
-            }
+                Debug.WriteLine(ex.Message);
+				Logger.Log(MessageType.Error, "Failed to create project");
+                throw;
+			}
         }
     }
 }

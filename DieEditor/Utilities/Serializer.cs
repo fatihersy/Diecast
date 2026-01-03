@@ -23,8 +23,9 @@ namespace DieEditor.Utilities
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error serializing to file: " + ex.Message);
-                // TODO: Log
+                Debug.WriteLine("Error serializing file" + ex.Message);
+                Logger.Log(MessageType.Error, "Error serializing to file" + ex.Message);
+                throw;
             }
         }
 
@@ -40,11 +41,11 @@ namespace DieEditor.Utilities
                 }
             }
             catch (Exception ex)
-            {
-                Debug.WriteLine("Error serializing to file: " + ex.Message);
-                // TODO: Log
-                return default(T);
-            }
+			{
+				Debug.WriteLine("Failed to deserialize the file" + ex.Message);
+				Logger.Log(MessageType.Error, "Failed to deserialize the file" + ex.Message);
+				throw;
+			}
         }
     }
 }

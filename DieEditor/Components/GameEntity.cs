@@ -1,7 +1,9 @@
 ﻿using DieEditor.GameProject;
+using DieEditor.Utilities;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Windows.Input;
 
 namespace DieEditor.Components
 {
@@ -9,7 +11,23 @@ namespace DieEditor.Components
     [KnownType(typeof(Transform))]
     public class GameEntity : ViewModelBase
 	{
-        private string _name;
+        private bool _isEnabled = true;
+
+        [DataMember]
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                if (_isEnabled != value)
+                {
+                    _isEnabled = value;
+                    OnPropertyChanged(nameof(IsEnabled));
+				}
+            }
+		}
+
+		private string _name;
 
         [DataMember]
         public string Name
@@ -32,7 +50,10 @@ namespace DieEditor.Components
         private readonly ObservableCollection<GameComponent> _components = new ObservableCollection<GameComponent>();
         public ReadOnlyObservableCollection<GameComponent> Components { get; private set; }
 
-        [OnDeserialized]
+        public ICommand RenameCommand { get; set; }
+		public ICommand IsEnabledCommand { get; set; }
+
+		[OnDeserialized]
         void OnDeserialized(StreamingContext context)
         {
             if (_components != null)
@@ -40,6 +61,26 @@ namespace DieEditor.Components
 				Components = new ReadOnlyObservableCollection<GameComponent>(_components);
                 OnPropertyChanged(nameof(Components));
 			}
+
+            RenameCommand = new RelayCommand<string>(newName => 
+            {
+                var oldName = _name;
+                Name = newName;
+
+                Project.UndoRedoManager.Add(
+                    new UndoRedoAction(nameof(Name), this, oldName, newName, $"Entity:{oldName} renamed to {newName}")
+                );
+			}, x => x != _name);
+
+			IsEnabledCommand = new RelayCommand<bool>(newValue =>
+			{
+				var oldValue = _isEnabled;
+				IsEnabled = newValue;
+
+				Project.UndoRedoManager.Add(
+					new UndoRedoAction(nameof(IsEnabled), this, oldValue, newValue, newValue ? $"Entity:{Name} is Enabled" : $"Entity:{Name} is Disabled")
+				);
+			});
 		}
 
 		public GameEntity(Scene scene)
@@ -47,6 +88,7 @@ namespace DieEditor.Components
             Debug.Assert(scene != null);
             ParentScene = scene;
             _components.Add(new Transform(this));
+            OnDeserialized(new StreamingContext());
 		}
     }
 }

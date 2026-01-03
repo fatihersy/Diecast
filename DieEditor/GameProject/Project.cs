@@ -55,9 +55,11 @@ namespace DieEditor.GameProject
         public static void Save(Project project)
         {
             Serializer.toFile(project, project.FullPath);
+            Logger.Log(MessageType.Info, $"Project saved to {project.FullPath}");
         }
-        public void Unload() { }
-
+        public void Unload() {
+            UndoRedoManager.Reset();
+        }
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)

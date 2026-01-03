@@ -6,14 +6,77 @@
              xmlns:local="clr-namespace:DieEditor.Editors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-	<StackPanel>
-		<TextBlock Text="{Binding Name}" FontSize="24" FontWeight="Bold" Margin="10"/>
-		<ItemsControl ItemsSource="{Binding Components}">
-			<ItemsControl.ItemsPanel>
-				<ItemsPanelTemplate>
-					<StackPanel/>
-				</ItemsPanelTemplate>
-			</ItemsControl.ItemsPanel>
-		</ItemsControl>
-	</StackPanel>
+	<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+		<ScrollViewer.Style>
+			<Style TargetType="ScrollViewer">
+				<Style.Triggers>
+					<Trigger Property="DataContext" Value="{x:Null}">
+						<Setter Property="Visibility" Value="Collapsed"/>
+					</Trigger>
+				</Style.Triggers>
+			</Style>
+		</ScrollViewer.Style>
+		<StackPanel>
+			<Border Height="32">
+				<ToggleButton x:Name="addComponent"
+						  IsChecked="True" 
+						  HorizontalAlignment="Left" 
+						  VerticalAlignment="Center" 
+						  Margin="5,0"
+			>
+					<ToggleButton.Content>
+						<DockPanel>
+							<TextBlock Text="Components" Margin="5,0"/>
+							<Path Data="M0,0 L0,2 L4,6 L8,2 L8,0 L4,4 z" 
+							  HorizontalAlignment="Center"
+							  VerticalAlignment="Center"
+							  Fill="Black" 
+							  Margin="5,0"
+						/>
+
+						</DockPanel>
+					</ToggleButton.Content>
+				</ToggleButton>
+			</Border>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="96"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="96"/>
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Text="Name" 
+					   Grid.Column="0"
+					   Margin="5"
+					   HorizontalAlignment = "Center"
+					   VerticalAlignment = "Center"
+			/>
+				<TextBox Text="{Binding Name}" Tag="{Binding RenameCommand}"
+					   Grid.Column="1"
+					   Margin="5"
+					   HorizontalAlignment = "Stretch"
+					   VerticalAlignment = "Center"
+			/>
+				<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+					<TextBlock Text="Enabled" 
+						Margin="5"
+						Grid.Column="1"
+				/>
+					<CheckBox IsChecked="{Binding IsEnabled, Mode=OneWay}" 
+							  Command="{Binding IsEnabledCommand}"
+							  CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+						  VerticalAlignment="Center" 
+						  Margin="5" 
+				/>
+				</StackPanel>
+			</Grid>
+			<ItemsControl ItemsSource="{Binding Components}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+			</ItemsControl>
+		</StackPanel>
+	</ScrollViewer>
 </UserControl>

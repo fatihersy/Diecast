@@ -94,9 +94,10 @@ namespace DieEditor.GameProject
                 Projects = new ReadOnlyObservableCollection<ProjectData>(_projects);
                 ReadProjectData();
 			}
-            catch (Exception e){ 
-                Debug.WriteLine(e.Message);
-				// TODO: Log error
+            catch (Exception ex){ 
+                Debug.WriteLine(ex.Message);
+				Logger.Log(MessageType.Error, "Failed to open project template");
+                throw;
 			}
 		}
 

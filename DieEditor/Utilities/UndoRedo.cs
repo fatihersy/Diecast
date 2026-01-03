@@ -31,11 +31,28 @@ namespace DieEditor.Utilities
 			_undoAction = undoAction;
 			_redoAction = redoAction;
 		}
+
+        public UndoRedoAction(string property, object instance, object undoValue, object redoValue, string name) :
+            this(
+                () => // Undo
+                {
+                    var propInfo = instance.GetType().GetProperty(property);
+                    propInfo.SetValue(instance, undoValue);
+                },
+                () => // Redo
+                {
+                    var propInfo = instance.GetType().GetProperty(property);
+                    propInfo.SetValue(instance, redoValue);
+                },
+                    name
+				)
+        {}
 	}
 
 	public class UndoRedo
     {
-        private readonly ObservableCollection<IUndoableAction> _redoList = new ObservableCollection<IUndoableAction>();
+        private bool _enableAdd = true;
+		private readonly ObservableCollection<IUndoableAction> _redoList = new ObservableCollection<IUndoableAction>();
         private readonly ObservableCollection<IUndoableAction> _undoList = new ObservableCollection<IUndoableAction>();
 
         public ReadOnlyObservableCollection<IUndoableAction> RedoList { get; }
@@ -48,8 +65,11 @@ namespace DieEditor.Utilities
         }
         public void Add(IUndoableAction action)
         {
-            _undoList.Add(action);
-            _redoList.Clear();
+            if (_enableAdd)
+            {
+				_undoList.Add(action);
+				_redoList.Clear();
+			}
 		}
 
 		public void Undo()
@@ -57,8 +77,10 @@ namespace DieEditor.Utilities
             if (_undoList.Count > 0)
             {
                 var action = _undoList[^1];
-                action.Undo();
-                _undoList.RemoveAt(_undoList.Count - 1);
+                _enableAdd = false;
+				action.Undo();
+                _enableAdd = true;
+				_undoList.RemoveAt(_undoList.Count - 1);
                 _redoList.Add(action);
             }
 		}
@@ -67,8 +89,10 @@ namespace DieEditor.Utilities
             if (_redoList.Count > 0)
             {
                 var action = _redoList[^1];
+                _enableAdd = false;
                 action.Redo();
-                _redoList.RemoveAt(_redoList.Count - 1);
+                _enableAdd = true;
+				_redoList.RemoveAt(_redoList.Count - 1);
                 _undoList.Add(action);
             }
         }

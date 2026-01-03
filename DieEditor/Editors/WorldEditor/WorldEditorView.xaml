@@ -45,7 +45,14 @@
 					HorizontalAlignment="Stretch" 
 					VerticalAlignment="Top" 
 				/>
-				<utils:UndoRedoView DataContext="{Binding UndoRedoManager}" Grid.Row="1"/>
+				<TabControl Grid.Row="1">
+					<TabItem Header="History">
+						<utils:UndoRedoView DataContext="{Binding UndoRedoManager}" />
+					</TabItem>
+					<TabItem Header="Log">
+						<utils:LoggerView/>
+					</TabItem>
+				</TabControl>
 			</Grid>
 			<GridSplitter
 				Grid.Column="1"

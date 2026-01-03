@@ -22,7 +22,19 @@ namespace DieEditor.GameProject
         public ProjectBrowserDialog()
         {
             InitializeComponent();
-        }
+            Loaded += ProjectBrowserDialog_Loaded;
+		}
+
+        private void ProjectBrowserDialog_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= ProjectBrowserDialog_Loaded;
+            if(!OpenProject.Projects.Any())
+            {
+                OpenProjectButton.IsEnabled = false;
+				openProjectView.Visibility = Visibility.Hidden;
+                ToggleProjectButton_Click(NewProjectButton, new RoutedEventArgs());
+			}
+		}
 
         private void ToggleProjectButton_Click(object sender, RoutedEventArgs e)
         {
