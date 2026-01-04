@@ -1,41 +1,48 @@
 #pragma once
 #include "CommonHeaders.h"
-#include <limits>
 
 namespace die::id {
 
 	using id_type = u64;
-	constexpr u32 generation_bits{ 32 };
-	constexpr u32 index_bits{ sizeof(id_type) * 8 - generation_bits};
-	constexpr id_type index_mask{ (id_type{1} << index_bits) - 1};
-	constexpr id_type generation_mask{ (id_type{1} << generation_bits) - 1 };
-	constexpr id_type id_mask{ std::numeric_limits<id_type>::max() };
 
-	using generation_type = std::conditional_t<generation_bits <= 16, std::conditional_t<generation_bits <= 8, u8, u16>, u32>;
-	static_assert(sizeof(generation_type) * 8 >= generation_bits);
+	namespace internal {
+		constexpr u32 generation_bits{ 32 };
+		constexpr u32 index_bits{ sizeof(id_type) * 8 - generation_bits };
+		constexpr id_type index_mask{ (id_type{1} << index_bits) - 1 };
+		constexpr id_type generation_mask{ (id_type{1} << generation_bits) - 1 };
+	}
+
+	constexpr id_type invalid_id{ std::numeric_limits<id_type>::max() };
+	constexpr u32 min_deleted_elements{ 1024 };
+
+	using generation_type = std::conditional_t< internal::generation_bits <= 16, std::conditional_t< internal::generation_bits <= 8, u8, u16>, u32>;
+	static_assert(sizeof(generation_type) * 8 >= internal::generation_bits);
 	static_assert( (sizeof(id_type) - sizeof(generation_type)) > 0 );
 
-	inline bool is_valid(id_type id) 
+	constexpr inline bool is_valid(id_type id) 
 	{
-		return id != id_mask;
+		return id != invalid_id;
 	}
 
-	inline id_type index(id_type id) 
+	constexpr inline id_type index(id_type id)
 	{
-		return id & index_mask;
+		id_type index{ id & internal::index_mask };
+		assert(index != internal::index_mask);
+		return index;
 	}
 
-	inline id_type generation(id_type id) 
+	constexpr inline id_type generation(id_type id)
 	{
-		return (id >> index_bits) & generation_mask;
+		return (id >> internal::index_bits) & internal::generation_mask;
 	}
 
-	inline id_type new_generation(id_type id) 
+	constexpr inline id_type new_generation(id_type id)
 	{
-		generation_type gen = static_cast<generation_type>(generation(id) + 1);
-		constexpr generation_type max_gen = std::numeric_limits<generation_type>::max() - static_cast< generation_type>(1);
-		assert(gen < max_gen);
-		return index(id) | (static_cast<id_type>(gen) << index_bits);
+		const id_type gen{ die::id::generation(id) + 1 };
+
+		assert(gen < ( ( (u64)1 << internal::generation_bits) - 1 ) );
+
+		return index(id) | (gen << internal::index_bits);
 	}
 
 #if _DEBUG
@@ -53,7 +60,7 @@ namespace die::id {
 			{																\
 				constexpr explicit name(id::id_type id)						\
 					: id_base{ id } {}										\
-				constexpr name() : id_base { id::id_mask } {}				\
+				constexpr name() : id_base { 0 } {}							\
 			};																\
 
 
