@@ -24,5 +24,19 @@ namespace DieEditor.Utilities
         {
             InitializeComponent();
         }
-    }
+
+        private void OnClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logger.Clear();
+		}
+
+        private void OnMessageFilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            var filter = 0x0;
+            if (toggleInfo.IsChecked == true) filter |= (int)MessageType.Info;
+			if (toggleWarn.IsChecked == true) filter |= (int)MessageType.Warn;
+			if (toggleError.IsChecked == true) filter |= (int)MessageType.Error;
+            Logger.SetMessageFilter(filter);
+		}
+	}
 }

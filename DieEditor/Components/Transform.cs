@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace DieEditor.Components
 {
     [DataContract]
-	public class Transform : GameComponent
+	class Transform : GameComponent
     {
         private Vector3 _position = Vector3.Zero;
         [DataMember]

@@ -51,7 +51,9 @@
 					   HorizontalAlignment = "Center"
 					   VerticalAlignment = "Center"
 			/>
-				<TextBox Text="{Binding Name}" Tag="{Binding RenameCommand}"
+				<TextBox Text="{Binding Name, UpdateSourceTrigger=Explicit}"
+						 GotKeyboardFocus="OnNameTextBox_KBFocus_Got"
+						 LostKeyboardFocus="OnNameTextBox_KBFocus_Lost"
 					   Grid.Column="1"
 					   Margin="5"
 					   HorizontalAlignment = "Stretch"
@@ -62,9 +64,7 @@
 						Margin="5"
 						Grid.Column="1"
 				/>
-					<CheckBox IsChecked="{Binding IsEnabled, Mode=OneWay}" 
-							  Command="{Binding IsEnabledCommand}"
-							  CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+					<CheckBox IsChecked="{Binding IsEnabled, Mode=OneWay}" Click="OnIsEnabledCheckBox_Click"
 						  VerticalAlignment="Center" 
 						  Margin="5" 
 				/>

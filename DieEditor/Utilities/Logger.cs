@@ -45,7 +45,7 @@ namespace DieEditor.Utilities
 
     static class Logger
     {
-        private static ObservableCollection<LogMessage> _messages = new ObservableCollection<LogMessage>();
+        private static readonly ObservableCollection<LogMessage> _messages = new ObservableCollection<LogMessage>();
         public static ReadOnlyObservableCollection<LogMessage> Messages { get; } = new ReadOnlyObservableCollection<LogMessage>(_messages);
         public static int _messageFilter = (int)(MessageType.Info | MessageType.Warn | MessageType.Error);
         public static CollectionViewSource FilteredMessages { get; } = new CollectionViewSource() { Source = Messages };

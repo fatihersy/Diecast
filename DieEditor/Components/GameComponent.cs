@@ -3,8 +3,10 @@ using System.Runtime.Serialization;
 
 namespace DieEditor.Components
 {
+    interface IMSComponent { }
+
     [DataContract]
-    public class GameComponent : ViewModelBase
+    abstract class GameComponent : ViewModelBase
     {
         [DataMember]
         public GameEntity Owner { get; private set; }
@@ -15,4 +17,8 @@ namespace DieEditor.Components
             Owner = owner;
 		}
 	}
+
+    abstract class MSComponent<T> : ViewModelBase, IMSComponent where T : GameComponent { 
+
+    }
 }

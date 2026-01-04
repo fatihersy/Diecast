@@ -25,16 +25,10 @@ namespace DieEditor.Editors
 
         private void OnGameEntitiesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            GameEntityView.Instance.DataContext = null; 
-
 			var listBox = sender as ListBox;
-            if (listBox != null && e.AddedItems.Count > 0)
-            {
-                GameEntityView.Instance.DataContext = listBox.SelectedItems[0] as GameEntity;
-			}
 
-            var newSelections = listBox.SelectedItems.Cast<GameEntity>().ToList();
-            var previousSelections = newSelections
+            var newSelection = listBox.SelectedItems.Cast<GameEntity>().ToList();
+            var previousSelections = newSelection
                 .Except(e.AddedItems.Cast<GameEntity>())
                 .Concat(e.RemovedItems.Cast<GameEntity>())
                 .ToList();
@@ -47,10 +41,18 @@ namespace DieEditor.Editors
 				() => // Redo
 				{
 					listBox.UnselectAll();
-					newSelections.ForEach(sel => (listBox.ItemContainerGenerator.ContainerFromItem(sel) as ListBoxItem).IsSelected = true);
+					newSelection.ForEach(sel => (listBox.ItemContainerGenerator.ContainerFromItem(sel) as ListBoxItem).IsSelected = true);
 				},
 				"Selection changed"
 			));
+
+
+            MSGameEntity msEntity = null;
+            if (newSelection.Any())
+            {
+                msEntity = new MSGameEntity(newSelection);
+            }
+            GameEntityView.Instance.DataContext = msEntity;
 		}
 	}
 }
