@@ -6,5 +6,5 @@
 		<a:string>src</a:string>
 	</Folders>
 	<ProjectFile>project.die</ProjectFile>
-	<ProjectType>1st-Person Project</ProjectType>
+	<ProjectType>Top-Down Project</ProjectType>
 </ProjectTemplate>

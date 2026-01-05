@@ -9,71 +9,37 @@
 	<UserControl.DataContext>
 		<local:OpenProject/>
 	</UserControl.DataContext>
-    <Grid Background="Black">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
-		<ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Projects}" x:Name="projectsListBox"
-				 SelectedIndex="0"
-                 Background="DarkGray" 
-                 Foreground="White" 
-                 FontSize="16">
-			<ListBox.ItemContainerStyle>
-				<Style TargetType="ListBoxItem">
-					<EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
-				</Style>
-			</ListBox.ItemContainerStyle>
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<StackPanel Orientation="Horizontal" Margin="5">
-						<Image Source="{Binding Icon}" Width="32" Height="32" Margin="0,0,10,0"/>
-						<TextBlock Text="{Binding ProjectName}" VerticalAlignment="Center"/>
-					</StackPanel>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-			
-		</ListBox>
-
-		<Grid Grid.Row="0" Grid.Column="1" Margin="5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <Border Grid.Row="0" Grid.Column="1" 
-                Margin="5,0,0,0" 
-                BorderBrush="Gray" 
-                BorderThickness="1">
-				<Image Source="{Binding SelectedItem.Screenshot, ElementName=projectsListBox}" 
-                       Stretch="Uniform"/>
-			</Border>
-        </Grid>
-
-        <StackPanel Grid.Row="1" Grid.Column="1"
-                Orientation="Horizontal" 
-                HorizontalAlignment="Center" 
-                Margin="0,0,0,10">
-
-            <Button x:Name="OpenProjectButton"
-                IsDefault="True" 
-                Click="OpenButton_Click" 
-                Content="Open" 
-                Width="100" 
-                Height="30" 
-                Margin="5,0"/>
-
-            <Button x:Name="NewProjectButton"
-                IsCancel="True" 
-                Click="CancelButton_Click" 
-                Content="Cancel" 
-                Width="100" 
-                Height="30" 
-                Margin="5,0"/>
-        </StackPanel>
-    </Grid>
+	<Border CornerRadius="3" Background="{StaticResource Editor.Window.GrayBrush3}" Width="700"
+            HorizontalAlignment="Center" Margin="0,30">
+		<StackPanel>
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+				<ListBox Width="195" Height="250" ItemsSource="{Binding Projects}" x:Name="projectsListBox"
+                     SelectedIndex="0">
+					<ListBox.ItemContainerStyle>
+						<Style TargetType="ListBoxItem" >
+							<EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
+						</Style>
+					</ListBox.ItemContainerStyle>
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Horizontal">
+								<Image Source="{Binding Icon}" Margin="0,0,5,0"/>
+								<TextBlock Text="{Binding ProjectName}"/>
+							</StackPanel>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+				<Border Width="400" Height="250" Margin="5,0,0,0">
+					<Border.Background>
+						<ImageBrush ImageSource="{Binding Path=SelectedItem.Screenshot, ElementName=projectsListBox}"/>
+					</Border.Background>
+				</Border>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                    Margin="0,30,0,0">
+				<Button Content="Open" Width="96" IsDefault="True" Click="OpenButton_Click"/>
+				<Button Content="Exit" Width="96" Margin="30,0,0,0" IsCancel="True"/>
+			</StackPanel>
+		</StackPanel>
+	</Border>
 </UserControl>

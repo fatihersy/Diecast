@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:DieEditor"
         xmlns:editors="clr-namespace:DieEditor.Editors"
         mc:Ignorable="d" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
-        Title="DieEditor" Width="1920" Height="1080" >
+        Title="DieEditor" Width="1920" Height="1080" 
+		Style="{StaticResource DieWindowStyle}">
 	<Grid>
 		<editors:WorldEditorView/>
 	</Grid>
