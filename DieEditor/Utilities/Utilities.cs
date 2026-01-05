@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace DieEditor.Utilities
 {
+    public static class ID
+    {
+        public static int INVALID_ID => -1;
+        public static bool IsValid(int id) => id != INVALID_ID;
+    }
+
     public static class MathUtils
     {
         public static float Epsilon => 0.00001f;

@@ -3,17 +3,17 @@
 
 namespace die::id {
 
-	using id_type = u64;
+	using id_type = u32;
 
 	namespace internal {
-		constexpr u32 generation_bits{ 32 };
-		constexpr u32 index_bits{ sizeof(id_type) * 8 - generation_bits };
-		constexpr id_type index_mask{ (id_type{1} << index_bits) - 1 };
-		constexpr id_type generation_mask{ (id_type{1} << generation_bits) - 1 };
+		inline constexpr u32 generation_bits{ 10 };
+		inline constexpr u32 index_bits{ sizeof(id_type) * 8 - generation_bits };
+		inline constexpr id_type index_mask{ (id_type{1} << index_bits) - 1 };
+		inline constexpr id_type generation_mask{ (id_type{1} << generation_bits) - 1 };
 	}
 
-	constexpr id_type invalid_id{ std::numeric_limits<id_type>::max() };
-	constexpr u32 min_deleted_elements{ 1024 };
+	inline constexpr id_type invalid_id{ std::numeric_limits<id_type>::max() };
+	inline constexpr u32 min_deleted_elements{ 1024 };
 
 	using generation_type = std::conditional_t< internal::generation_bits <= 16, std::conditional_t< internal::generation_bits <= 8, u8, u16>, u32>;
 	static_assert(sizeof(generation_type) * 8 >= internal::generation_bits);

@@ -50,14 +50,23 @@ namespace DieEditor.GameProject
 		public ICommand AddGameEntitiyCommand { get; private set; }
 		public ICommand RemoveGameEntitiyCommand { get; private set; }
 
-		private void AddGameEntitiy(GameEntity entity)
+		private void AddGameEntitiy(GameEntity entity, int index = -1)
 		{
 			Debug.Assert(!_gameEntities.Contains(entity));
-			_gameEntities.Add(entity);
+			entity.IsActive = IsActive;
+			if (index == -1)
+			{
+				_gameEntities.Add(entity);
+			}
+			else
+			{
+				_gameEntities.Insert(index, entity);
+			}
 		}
 		private void RemoveGameEntitiy(GameEntity entity)
 		{
 			Debug.Assert(_gameEntities.Contains(entity));
+			entity.IsActive = false;
 			_gameEntities.Remove(entity);
 		}
 
@@ -69,15 +78,19 @@ namespace DieEditor.GameProject
 				GameEntities = new ReadOnlyObservableCollection<Components.GameEntity>(_gameEntities);
 				OnPropertyChanged(nameof(GameEntities));
 			}
+            foreach (var entity in _gameEntities)
+            {
+				entity.IsActive = IsActive;
+            }
 
-			AddGameEntitiyCommand = new RelayCommand<GameEntity>(entitiy =>
+            AddGameEntitiyCommand = new RelayCommand<GameEntity>(entitiy =>
 			{
 				AddGameEntitiy(entitiy);
 				var index = _gameEntities.Count - 1;
 
 				Project.UndoRedoManager.Add(new UndoRedoAction(
 					() => RemoveGameEntitiy(entitiy),
-					() => _gameEntities.Insert(index, entitiy),
+					() => AddGameEntitiy(entitiy, index),
 					$"Added Entitiy:{entitiy.Name} to index"
 				));
 			});
@@ -88,8 +101,8 @@ namespace DieEditor.GameProject
 				RemoveGameEntitiy(entitiy);
 
 				Project.UndoRedoManager.Add(new UndoRedoAction(
-					() => _gameEntities.Insert(index, entitiy),
-					() => _gameEntities.Remove(entitiy),
+					() => AddGameEntitiy(entitiy, index),
+					() => RemoveGameEntitiy(entitiy),
 					$"Removed Entity:{entitiy.Name}"
 				));
 			});

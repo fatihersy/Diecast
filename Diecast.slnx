@@ -6,4 +6,6 @@
     <Platform Project="x64" />
   </Project>
   <Project Path="Engine/Engine.vcxproj" Id="ecd3911f-9541-4ca5-88e1-377c26680afc" />
+  <Project Path="EngineDLL/EngineDLL.vcxproj" Id="6bf708b9-0cfb-4b1a-8bc1-7b24cb169657" />
+  <Project Path="EngineTest/EngineTest.vcxproj" Id="b429cc52-cbaa-460e-bbf6-591f3482cdf0" />
 </Solution>

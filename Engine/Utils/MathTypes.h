@@ -3,8 +3,8 @@
 #include "CommonHeaders.h"
 
 namespace die::math {
-	constexpr float PI = 3.1415926535897932384626433832795f;
-	constexpr float epsilon = 1e-5f;
+	inline constexpr float PI = 3.1415926535897932384626433832795f;
+	inline constexpr float epsilon = 1e-5f;
 
 #if defined(_WIN64)
 	using FLOAT2  = DirectX::XMFLOAT2;

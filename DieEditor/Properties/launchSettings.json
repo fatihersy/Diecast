@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DieEditor": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

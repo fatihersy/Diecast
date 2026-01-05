@@ -1,10 +1,10 @@
-﻿using DieEditor.GameProject;
+﻿using DieEditor.DLLImport;
+using DieEditor.GameProject;
 using DieEditor.Utilities;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using System.Windows.Input;
-using System.Xml;
 
 namespace DieEditor.Components
 {
@@ -12,7 +12,45 @@ namespace DieEditor.Components
     [KnownType(typeof(Transform))]
     class GameEntity : ViewModelBase
 	{
-        private bool _isEnabled = true;
+		private int _entityId = ID.INVALID_ID;
+		public int EntityId
+		{
+			get => _entityId;
+			set
+			{
+				if (_entityId != value)
+				{
+					_entityId = value;
+					OnPropertyChanged(nameof(EntityId));
+				}
+			}
+		}
+
+		private bool _isActive;
+		public bool IsActive
+		{
+			get => _isActive;
+			set
+			{
+				if (_isActive != value)
+				{
+					_isActive = value;
+					if (_isActive)
+					{
+						EntityId = EngineAPI.CreateGameEntity(this);
+						Debug.Assert(ID.IsValid(_entityId));
+					}
+					else
+					{
+						EngineAPI.RemoveGameEntity(this);
+					}
+
+					OnPropertyChanged(nameof(IsActive));
+				}
+			}
+		}
+
+		private bool _isEnabled = true;
 
         [DataMember]
         public bool IsEnabled
@@ -50,6 +88,9 @@ namespace DieEditor.Components
         [DataMember(Name = nameof(Components))]
         private readonly ObservableCollection<GameComponent> _components = new ObservableCollection<GameComponent>();
         public ReadOnlyObservableCollection<GameComponent> Components { get; private set; }
+
+		public GameComponent GetComponent(Type type) => Components.FirstOrDefault(c => c.GetType() == type);
+		public T GetComponent<T>() where T : GameComponent => GetComponent(typeof(T)) as T;
 
 		[OnDeserialized]
         void OnDeserialized(StreamingContext context)
